@@ -25,7 +25,14 @@ class EmojiTableTableViewController: UITableViewController {
         Emoji(symbol: "💔", name: "Broken Heart", description: "A red, broken heart.", usage: "extreme sadness"), Emoji(symbol: "💤", name: "Snore", description: "Three blue \'z\'s.", usage: "tired, sleepiness"),
         Emoji(symbol: "🏁", name: "Checkered Flag", description: "A black-and-white checkered flag.", usage: "completion")
     ]
-
+    
+    // MARK: Actions
+    @IBAction func editButtonTapped(_ sender: UIBarButtonItem) {
+        let tableViewEdittingMode = tableView.isEditing
+        
+        tableView.setEditing(!tableViewEdittingMode, animated: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -62,8 +69,14 @@ class EmojiTableTableViewController: UITableViewController {
         
         cell.textLabel?.text = "\(emoji.symbol) - \(emoji.name)"
         cell.detailTextLabel?.text = emoji.description
+        cell.showsReorderControl = true
 
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let emoji = emojis[indexPath.row]
+        print("\(emoji.symbol) \(indexPath)")
     }
 
     /*
@@ -85,13 +98,17 @@ class EmojiTableTableViewController: UITableViewController {
         }    
     }
     */
-
-    /*
+    
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+        let movedEmoji = emojis.remove(at: fromIndexPath.row)
+        emojis.insert(movedEmoji, at: to.row)
+        tableView.reloadData()
     }
-    */
+    
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .none
+    }
 
     /*
     // Override to support conditional rearranging of the table view.
